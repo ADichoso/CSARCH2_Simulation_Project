@@ -112,11 +112,13 @@ public class binary32converter
 
         Binary32Number binary32Number = new Binary32Number(binaryNumber);
         System.out.println("Original Value: " + binaryNumber.getOriginalValue());
-        System.out.println("Original Value: " + binaryNumber.getNormalizedValue());
+        System.out.println("Normalized Value: " + binaryNumber.getNormalizedValue());
         System.out.println("Sign: " + binary32Number.getSignString());
         System.out.println("Exponent: " + binary32Number.getExponentString());
         System.out.println("Mantissa: " + binary32Number.getMantissaString());
         System.out.println("Binary Representation: 0b" + binary32Number.toString());
         System.out.println("Hex Representation: 0x" + binary32Number.toStringHex());
+        System.out.println("Case: " + binary32Number.getCase());
+        binary32Number.outputToFile(binaryNumber, binary32Number);
     }
 }
