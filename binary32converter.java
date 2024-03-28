@@ -121,5 +121,7 @@ public class binary32converter
         System.out.println("Mantissa: " + binary32Number.getMantissaString());
         System.out.println("Binary Representation: 0b" + binary32Number.toString());
         System.out.println("Hex Representation: 0x" + binary32Number.toStringHex());
+        System.out.println("Case: " + binary32Number.getCase());
+        binary32Number.outputToFile(binaryNumber, binary32Number);
     }
 }

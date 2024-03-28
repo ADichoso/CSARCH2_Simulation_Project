@@ -113,7 +113,47 @@ public class Binary32Number {
         }
 
         binary32Number.setMantissa(nMantissa);
-
+        
+        //Checking exponent to see if it is a special case
+        //If nEPrime is 0 or 255 (0000 0000 or 1111 1111), then it is a special case
+        if(nEPrime == 0 || nEPrime == 255)
+        {
+            
+            if(nEPrime == 0) {
+                //if nEPrime is 0, it could be a zero or denormalized number
+                if (nMantissa == 0) {
+                    //if mantissa is 0, it is zero
+                    if (binary32Number.getSign() == 0) {
+                        binary32Number.setCase("Positive Zero");
+                    } else {
+                        binary32Number.setCase("Negative Zero");
+                    }
+                } else {
+                    binary32Number.setCase("Denormalized");
+                }
+            } else {
+                //if nEPrime is 255, it could be a infinity or NaN
+                if(nMantissa == 0) {
+                    //if mantissa is 0, it is infinity
+                    if(binary32Number.getSign() == 0) {
+                        binary32Number.setCase("Positive Infinity");
+                    } else {
+                        binary32Number.setCase("Negative Infinity");
+                    }
+                } else {
+                    String sSignificand = binary32Number.getMantissaString();
+                    if(sSignificand.charAt(0) == '0') {
+                        if(sSignificand.charAt(1) == '1') {
+                            //if the first two bits are 01, it is a sNaN
+                            binary32Number.setCase("sNaN");
+                        }
+                    } else {
+                        //if the first bit is 1, it is a qNaN
+                        binary32Number.setCase("qNaN");
+                    }
+                }
+            }
+        }
         return binary32Number;
     }
 
@@ -195,5 +235,23 @@ public class Binary32Number {
         }
 
         return sHexNumber;
+    }
+    public void outputToFile(BinaryNumber binaryNumber, Binary32Number binary32Number){
+        try {
+            FileWriter myWriter = new FileWriter("output.txt");
+            myWriter.write("Original Value: " + binaryNumber.getOriginalValue() + "\n");
+            myWriter.write("Normalized Value: " + binaryNumber.getNormalizedValue() + "\n");
+            myWriter.write("Sign: " + binary32Number.getSignString() + "\n");
+            myWriter.write("Exponent: " + binary32Number.getExponentString() + "\n");
+            myWriter.write("Mantissa: " + binary32Number.getMantissaString() + "\n");
+            myWriter.write("Binary Representation: 0b" + binary32Number.toString() + "\n");
+            myWriter.write("Hex Representation: 0x" + binary32Number.toStringHex() + "\n");
+            myWriter.write("Case: " + binary32Number.getCase() + "\n");
+            myWriter.close();
+            System.out.println("Successfully wrote to the file: output.txt");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
     }
 }
