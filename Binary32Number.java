@@ -80,6 +80,7 @@ public class Binary32Number {
         this.setSign(binary32Number.getSign());
         this.setExponent(binary32Number.getExponent());
         this.setMantissa(binary32Number.getMantissa());
+        this.setCase(binary32Number.getCase());
     }
 
     public static Binary32Number valueOf(BinaryNumber binaryNumber)
@@ -123,6 +124,8 @@ public class Binary32Number {
         
         //Checking exponent to see if it is a special case
         //If nEPrime is 0 or 255 (0000 0000 or 1111 1111), then it is a special case
+        System.out.println("nEPrime: " + nEPrime);
+        System.out.println("nMantissa: " + nMantissa.intValue());
         if(nEPrime == 0 || nEPrime == 255)
         {
             
@@ -144,6 +147,7 @@ public class Binary32Number {
                     //if mantissa is 0, it is infinity
                     if(binary32Number.getSign() == 0) {
                         binary32Number.setCase("Positive Infinity");
+                        System.out.println("Positive Infinity");
                     } else {
                         binary32Number.setCase("Negative Infinity");
                     }
