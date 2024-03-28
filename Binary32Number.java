@@ -1,18 +1,25 @@
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigInteger;
 
 public class Binary32Number {
     private int nSign;
     private int nExponent;
     private BigInteger nMantissa;
+    //for special cases
+    private String sCase = "Normal";
+
 
     public void setSign(int nSign){this.nSign = nSign;}
     public void setExponent(int nExponent){this.nExponent = nExponent;}
     public void setMantissa(BigInteger nMantissa){this.nMantissa = nMantissa;}
+    public void setCase(String sCase){this.sCase = sCase;}
 
     public int getSign(){return this.nSign;}
     public int getExponent(){return this.nExponent;}
     public BigInteger getMantissa(){return this.nMantissa;}
-
+    public String getCase(){return this.sCase;}
+    
     public String getSignString(){return String.valueOf(this.nSign);}
     public String getExponentString()
     {
@@ -121,7 +128,7 @@ public class Binary32Number {
             
             if(nEPrime == 0) {
                 //if nEPrime is 0, it could be a zero or denormalized number
-                if (nMantissa == 0) {
+                if (nMantissa.intValue() == 0) {
                     //if mantissa is 0, it is zero
                     if (binary32Number.getSign() == 0) {
                         binary32Number.setCase("Positive Zero");
@@ -133,7 +140,7 @@ public class Binary32Number {
                 }
             } else {
                 //if nEPrime is 255, it could be a infinity or NaN
-                if(nMantissa == 0) {
+                if(nMantissa.intValue() == 0) {
                     //if mantissa is 0, it is infinity
                     if(binary32Number.getSign() == 0) {
                         binary32Number.setCase("Positive Infinity");
