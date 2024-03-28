@@ -101,6 +101,9 @@ public class binary32converter
         System.out.println("Exp Power: " + binaryNumber.getExpValue());
 
         System.out.println("================================");
+        System.out.println("Normalized Number Value: " + binaryNumber.getNormalizedValue());
+
+        System.out.println("================================");
         System.out.println("Denormalized Number Value: " + binaryNumber.getDenormalizedValue());
 
         conversion(binaryNumber);
