@@ -1,15 +1,17 @@
+import java.math.BigInteger;
+
 public class Binary32Number {
     private int nSign;
     private int nExponent;
-    private int nMantissa;
+    private BigInteger nMantissa;
 
     public void setSign(int nSign){this.nSign = nSign;}
     public void setExponent(int nExponent){this.nExponent = nExponent;}
-    public void setMantissa(int nMantissa){this.nMantissa = nMantissa;}
+    public void setMantissa(BigInteger nMantissa){this.nMantissa = nMantissa;}
 
     public int getSign(){return this.nSign;}
     public int getExponent(){return this.nExponent;}
-    public int getMantissa(){return this.nMantissa;}
+    public BigInteger getMantissa(){return this.nMantissa;}
 
     public String getSignString(){return String.valueOf(this.nSign);}
     public String getExponentString()
@@ -25,25 +27,34 @@ public class Binary32Number {
             nExponent /= 2;
         }while(nExponent != 0);
 
+        while(sExponentString.length() != 8)
+            sExponentString += "0";
+
         return sExponentString;
     }
 
     public String getMantissaString()
     {
-        int nMantissa = this.nMantissa;
-        
+        BigInteger nMantissa = this.nMantissa;
+        BigInteger nTwo = new BigInteger("2");
+        BigInteger nZero = new BigInteger("0");
+
         //Continuous Divison Step
         String sMantissaString = "";
         do
         {
             //Append modulo 2 of baseIntWhole to string
-            sMantissaString = (nMantissa % 2) + sMantissaString;
-            nMantissa /= 2;
-        }while(nMantissa != 0);
+            sMantissaString = nMantissa.mod(nTwo).toString() + sMantissaString;
+            nMantissa = nMantissa.divide(nTwo);
+        }while(!nMantissa.equals(nZero));
 
-        //Sign extend upto 23 bits
-        while(sMantissaString.length() != 23)
-            sMantissaString += "0";
+        if(sMantissaString.length() < 23)
+            //Sign extend upto 23 bits
+            while(sMantissaString.length() != 23)
+                sMantissaString += "0";
+        else if(sMantissaString.length() > 23)
+            //Cut off rest
+            sMantissaString = sMantissaString.substring(0, 23);
 
         return sMantissaString;
     }
@@ -52,8 +63,9 @@ public class Binary32Number {
     {
         this.setSign(0);
         this.setExponent(0);
-        this.setMantissa(0);
+        this.setMantissa(new BigInteger("0"));
     }
+
     public Binary32Number(BinaryNumber binaryNumber)
     {
         Binary32Number binary32Number = Binary32Number.valueOf(binaryNumber);
@@ -91,9 +103,14 @@ public class Binary32Number {
             sFlippedMantissaString = sMantissaString.charAt(i) + sFlippedMantissaString;
         }
 
-        int nMantissa = 0;
+        BigInteger nMantissa = new BigInteger("0");
+        BigInteger nTwo = new BigInteger("2");
         for(int i = 0; i < sFlippedMantissaString.length(); i++)
-            nMantissa += sFlippedMantissaString.charAt(i) == '1' ? Math.pow(2, i) : 0;
+        {
+            BigInteger nValueToAdd = sFlippedMantissaString.charAt(i) == '1' ? nTwo.pow(i) : new BigInteger("0");
+            System.out.println("Adding:" + nValueToAdd.toString());
+            nMantissa = nMantissa.add(nValueToAdd);
+        }
 
         binary32Number.setMantissa(nMantissa);
 

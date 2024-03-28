@@ -101,6 +101,9 @@ public class binary32converter
         System.out.println("Exp Power: " + binaryNumber.getExpValue());
 
         System.out.println("================================");
+        System.out.println("Normalized Number Value: " + binaryNumber.getNormalizedValue());
+
+        System.out.println("================================");
         System.out.println("Denormalized Number Value: " + binaryNumber.getDenormalizedValue());
 
         conversion(binaryNumber);
@@ -112,7 +115,7 @@ public class binary32converter
 
         Binary32Number binary32Number = new Binary32Number(binaryNumber);
         System.out.println("Original Value: " + binaryNumber.getOriginalValue());
-        System.out.println("Original Value: " + binaryNumber.getNormalizedValue());
+        System.out.println("Normalized Value: " + binaryNumber.getNormalizedValue());
         System.out.println("Sign: " + binary32Number.getSignString());
         System.out.println("Exponent: " + binary32Number.getExponentString());
         System.out.println("Mantissa: " + binary32Number.getMantissaString());

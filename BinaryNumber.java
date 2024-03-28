@@ -1,3 +1,6 @@
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 public class BinaryNumber {
     private String sWholePart;
     private String sFractionalPart;
@@ -38,42 +41,25 @@ public class BinaryNumber {
         //Step 2: Split into base & exponent
         String sBase = sString.split("x")[0];
         String sExp = sString.split("x")[1];
+        
+        BigDecimal dFractionPart = BigDecimal.valueOf(0.0);
 
+        BigInteger nWholePart = new BigInteger(sBase.split("\\.")[0].trim());
 
-        int nWholePart = Integer.parseInt(sBase.replace("-", "").split("\\.")[0]);
-        String sBinaryBaseIntWhole = "";
-        do
+        System.out.println("Big Integer Value:" + nWholePart.toString());
+
+        try
         {
-            //Append modulo 2 of baseIntWhole to string
-            sBinaryBaseIntWhole = (nWholePart % 2) + sBinaryBaseIntWhole;
-            nWholePart /= 2;
-        }while(nWholePart != 0);
-
-        int nMaxFractionalPartLength = 23 - sBinaryBaseIntWhole.length() + 1; //Max Length of Fractional Part
-
-        Double dFractionPart = Double.parseDouble("0." + sBase.replace("-", "").split("\\.")[1]);
-        String sBinaryBaseIntFraction = "0.";
-        for(int i = 0; i < nMaxFractionalPartLength; i++)
+            dFractionPart = new BigDecimal("0." + sBase.split("\\.")[1].trim());
+        } 
+        catch(ArrayIndexOutOfBoundsException e)
         {
-            //Curr Number * 2f
-            dFractionPart *= 2.0;
-
-            //Get whole number part
-            char cWholePart  = String.valueOf(dFractionPart).charAt(0);
-
-            //If whole part is 1, subtract 1 in fBaseFraction
-            if(cWholePart == '1')
-            dFractionPart -= 1.0;
-
-            //Add char to binary string
-            sBinaryBaseIntFraction += cWholePart;
-
-            if(dFractionPart == 0.0) break;
+            dFractionPart = BigDecimal.valueOf(0.0);
         }
 
 
-        binaryNumber.setWholePart(sBinaryBaseIntWhole);
-        binaryNumber.setFractionalPart(sBinaryBaseIntFraction);
+        binaryNumber.setWholePart(nWholePart.toString());
+        binaryNumber.setFractionalPart(dFractionPart.toString());
         binaryNumber.setExpValue(Integer.parseInt(sExp.split("\\^")[1]));
         binaryNumber.setSign(!sBase.contains("-"));
 
@@ -87,22 +73,34 @@ public class BinaryNumber {
         
         String sDenormalizedNumber = realNumber.getDenormalizedValue();
 
-        int nBaseWhole = Integer.parseInt(sDenormalizedNumber.split("\\.")[0].trim());
-        Double dBaseFraction = Double.parseDouble("0." + sDenormalizedNumber.split("\\.")[1].trim());
-        
+        BigInteger nBaseWhole = new BigInteger(sDenormalizedNumber.split("\\.")[0].trim());
+
+        System.out.println("Big Integer Value:" + nBaseWhole.toString());
+        BigDecimal dBaseFraction = BigDecimal.valueOf(0.0);
+
+        try
+        {
+            dBaseFraction = new BigDecimal("0." + sDenormalizedNumber.split("\\.")[1].trim());
+        } 
+        catch(ArrayIndexOutOfBoundsException e)
+        {
+            dBaseFraction = BigDecimal.valueOf(0.0);
+        }
+        System.out.println("Faraction: " + dBaseFraction);
         //To keep it easy, Use the denormalized real number value to convert to a binary number
         // Same sign
         binaryNumber.setSign(realNumber.getSign());
         binaryNumber.setExpValue(0); //Act as if there is no exponent value
 
         //Step 1: Convert base whole number to binary whole number (Continuous Divison)
+        BigInteger nTwo = BigInteger.valueOf(2);
         String sBinaryBaseIntWhole = "";
         do
         {
             //Append modulo 2 of baseIntWhole to string
-            sBinaryBaseIntWhole = (nBaseWhole % 2) + sBinaryBaseIntWhole;
-            nBaseWhole /= 2;
-        }while(nBaseWhole != 0);
+            sBinaryBaseIntWhole = (nBaseWhole.mod(nTwo)) + sBinaryBaseIntWhole;
+            nBaseWhole = nBaseWhole.divide(nTwo);
+        }while(nBaseWhole.intValue() != 0);
 
         binaryNumber.setWholePart(sBinaryBaseIntWhole);
 
@@ -110,26 +108,28 @@ public class BinaryNumber {
         //Notes: Binary32 can only support upto 23 bits for the mantissa
         //Get max length of fractional binary part of number by performing (23 - (sBinaryBaseIntWhole.length() - 1))
 
-        int nMaxFractionalPartLength = 23 - sBinaryBaseIntWhole.length() + 1; //Max Length of Fractional Part
+        int nMaxFractionLength = (23 - (sBinaryBaseIntWhole.length() - 1));
 
         //Continuous Division (Get current number)
         String sBinaryBaseIntFraction = "0.";
-        for(int i = 0; i < nMaxFractionalPartLength; i++)
+        BigDecimal dOne = BigDecimal.valueOf(1.0);
+        BigDecimal dTwo = BigDecimal.valueOf(2.0);
+        
+        for(int i = 0; i < nMaxFractionLength; i++)
         {
             //Curr Number * 2f
-            dBaseFraction *= 2.0;
+            dBaseFraction = dBaseFraction.multiply(dTwo);
 
             //Get whole number part
-            char cWholePart  = String.valueOf(dBaseFraction).charAt(0);
+            char cWholePart  = dBaseFraction.toPlainString().charAt(0);
 
             //If whole part is 1, subtract 1 in fBaseFraction
-            if(cWholePart == '1')
-                dBaseFraction -= 1.0;
+            if(cWholePart == '1') dBaseFraction = dBaseFraction.subtract(dOne);
 
             //Add char to binary string
             sBinaryBaseIntFraction += cWholePart;
 
-            if(dBaseFraction == 0.0) break;
+            if(dBaseFraction.doubleValue() == 0.0) break;
         }
 
         binaryNumber.setFractionalPart(sBinaryBaseIntFraction);
@@ -140,8 +140,8 @@ public class BinaryNumber {
     public String getNormalizedValue()
     {
         //Step 10: Create the Normalized Binary Number (Scientific Notation Format)
-        String sBinaryBaseIntWhole = String.valueOf(getWholePart());
-        String sBinaryBaseIntFraction = String.valueOf(getFractionalPart()).replace("0.", "");
+        String sBinaryBaseIntWhole = getWholePart();
+        String sBinaryBaseIntFraction = getFractionalPart().replace("0.", "");
 
         String sNormalizedBinaryNumber = "";
         int nBinaryExpPower = 0;
@@ -177,17 +177,66 @@ public class BinaryNumber {
             String sCutBinaryBase = sBinaryBaseIntWhole.substring(1, sBinaryBaseIntWhole.length());
             nBinaryExpPower = sCutBinaryBase.length();
 
-            sNormalizedBinaryNumber = "1." + sCutBinaryBase + sBinaryBaseIntFraction + "x" + "2^" + nBinaryExpPower;
+            sNormalizedBinaryNumber = "1." + sCutBinaryBase + sBinaryBaseIntFraction + "x" + "2^" + (getExpValue() + nBinaryExpPower);
         }
 
         return sNormalizedBinaryNumber;
     }
-
+    
     public String getDenormalizedValue() //Applies exponent value, removing that part in the number
     {
-        String sBase = String.valueOf(getWholePart()) + "." + String.valueOf(getFractionalPart()).replace("0.", "");
-        Double dDenormalizedBase = Double.parseDouble(sBase) * Math.pow(10, getExpValue());
-        String sDenormalizedBase = (getSign() ? '\0' : '-') + String.valueOf(dDenormalizedBase);
+        String sBase = "";
+        String sFractionalPart = String.valueOf(getFractionalPart()).replace("0.", "");
+        String sWholePart = String.valueOf(getWholePart());
+
+
+        int nExpValue = getExpValue();
+
+        if(nExpValue > 0)
+        {
+            //Case 1: No need to zero extend = Length of fractional part is greater than or equal to exp value
+            if(sFractionalPart.length() >= nExpValue)
+            {
+                //Shift decimal point to the right
+                String sFractionalPart1 = sFractionalPart.substring(0, nExpValue);
+                String sFractionalPart2 = sFractionalPart.substring(nExpValue, sFractionalPart.length());
+                sBase = sWholePart + sFractionalPart1 + "." + sFractionalPart2;
+            } 
+            //Case 2: Zero extend required (Number of zeroes = (Exp value - length of fractional part))
+            else 
+            {
+                sBase = sWholePart + sFractionalPart;
+                //Add zeroes after
+                for(int i = 0; i < nExpValue - sFractionalPart.length(); i++)
+                    sBase = sBase + "0";
+            }
+        }
+        else if(nExpValue < 0) 
+        {
+            //Case 1: No need to zero extend = Length of whole part is greater than or equal to exp value
+            int nExpMagnitude = nExpValue * -1;
+            if(sWholePart.length() >= nExpMagnitude)
+            {
+                //Shift decimal point to the left
+                String sWholePart1 = sWholePart.substring(0, sWholePart.length() - nExpMagnitude);
+                String sWholePart2 = sWholePart.substring(sWholePart.length() - nExpMagnitude, sWholePart.length());
+                sBase = sWholePart1 + "." + sWholePart2 + sFractionalPart;
+            } 
+            //Case 2: Zero extend required (Number of zeroes = (Exp value - length of whole part))
+            else
+            {
+                sBase = sWholePart + sFractionalPart;
+                //Add zeroes after
+                for(int i = 0; i < nExpMagnitude - sWholePart.length(); i++)
+                    sBase = "0" + sBase;
+                sBase = "0." + sBase;
+            } 
+            
+        }
+        else if(nExpValue == 0)
+            sBase =sWholePart + "." + sFractionalPart;
+
+        String sDenormalizedBase = (getSign() ? '\0' : '-') + sBase;
 
         return sDenormalizedBase;
     }
