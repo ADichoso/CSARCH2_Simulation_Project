@@ -89,8 +89,6 @@ public class ConverterGUI extends JFrame implements ActionListener{
         binaryCheckbox.setBorderPainted(false);
         binaryCheckbox.addActionListener(this);
 
-
-
       
 
         instructionLabel = new JLabel("<html>Input the floating point number<br/> in the chosen format (With Optional Exponent)</html>");
@@ -180,7 +178,7 @@ public class ConverterGUI extends JFrame implements ActionListener{
 
 
                     startPanel.setVisible(false);
-                    frame.setSize(750, 1000);
+                    frame.setSize(750, 640);
                     
 
                     convertPanel = new JPanel();
@@ -189,7 +187,7 @@ public class ConverterGUI extends JFrame implements ActionListener{
                     
                     //Original Value
                     originalValueLabel = new JLabel("Original Value");
-                    originalValueLabel.setPreferredSize(new Dimension(700, 15));
+                    originalValueLabel.setPreferredSize(new Dimension(700, 11));
                     originalValueLabel.setForeground(Color.GREEN);
                     originalValueLabel.setFont(new Font("Consolas", Font.BOLD, 10));
 
@@ -197,14 +195,14 @@ public class ConverterGUI extends JFrame implements ActionListener{
                     originalValueText.setFont(new Font("Consolas", Font.PLAIN, 30));
                     originalValueText.setForeground(Color.GREEN);
                     originalValueText.setBackground(Color.BLACK);
-                    originalValueText.setPreferredSize(new Dimension(700, 80));
+                    originalValueText.setPreferredSize(new Dimension(700, 40));
                     originalValueText.setBorder(border);
 
                     
 
                     //Normalized Value
                     normalizedValueLabel = new JLabel("Normalized Value");
-                    normalizedValueLabel.setPreferredSize(new Dimension(700, 15));
+                    normalizedValueLabel.setPreferredSize(new Dimension(700, 11));
                     normalizedValueLabel.setForeground(Color.GREEN);
                     normalizedValueLabel.setFont(new Font("Consolas", Font.BOLD, 10));
 
@@ -212,14 +210,14 @@ public class ConverterGUI extends JFrame implements ActionListener{
                     normalizedValueText.setFont(new Font("Consolas", Font.PLAIN, 30));
                     normalizedValueText.setForeground(Color.GREEN);
                     normalizedValueText.setBackground(Color.BLACK);
-                    normalizedValueText.setPreferredSize(new Dimension(700, 80));
+                    normalizedValueText.setPreferredSize(new Dimension(700, 40));
                     normalizedValueText.setBorder(border);
 
 
 
                     //Sign Value
                     signValueLabel = new JLabel("Sign Value");
-                    signValueLabel.setPreferredSize(new Dimension(700, 15));
+                    signValueLabel.setPreferredSize(new Dimension(700, 11));
                     signValueLabel.setForeground(Color.GREEN);
                     signValueLabel.setFont(new Font("Consolas", Font.BOLD, 10));
 
@@ -227,12 +225,12 @@ public class ConverterGUI extends JFrame implements ActionListener{
                     signValueText.setFont(new Font("Consolas", Font.PLAIN, 30));
                     signValueText.setForeground(Color.GREEN);
                     signValueText.setBackground(Color.BLACK);
-                    signValueText.setPreferredSize(new Dimension(700, 80));
+                    signValueText.setPreferredSize(new Dimension(700, 40));
                     signValueText.setBorder(border);
 
                     //Exponent Value
                     exponentValueLabel = new JLabel("Exponent");
-                    exponentValueLabel.setPreferredSize(new Dimension(700, 15));
+                    exponentValueLabel.setPreferredSize(new Dimension(700, 11));
                     exponentValueLabel.setForeground(Color.GREEN);
                     exponentValueLabel.setFont(new Font("Consolas", Font.BOLD, 10));
 
@@ -240,12 +238,12 @@ public class ConverterGUI extends JFrame implements ActionListener{
                     exponentValueText.setFont(new Font("Consolas", Font.PLAIN, 30));
                     exponentValueText.setForeground(Color.GREEN);
                     exponentValueText.setBackground(Color.BLACK);
-                    exponentValueText.setPreferredSize(new Dimension(700, 80));
+                    exponentValueText.setPreferredSize(new Dimension(700, 40));
                     exponentValueText.setBorder(border);
 
                     //Mantissa Value
                     mantissaValueLabel = new JLabel("Mantissa");
-                    mantissaValueLabel.setPreferredSize(new Dimension(700, 15));
+                    mantissaValueLabel.setPreferredSize(new Dimension(700, 11));
                     mantissaValueLabel.setForeground(Color.GREEN);
                     mantissaValueLabel.setFont(new Font("Consolas", Font.BOLD, 10));
 
@@ -253,12 +251,12 @@ public class ConverterGUI extends JFrame implements ActionListener{
                     mantissaValueText.setFont(new Font("Consolas", Font.PLAIN, 30));
                     mantissaValueText.setForeground(Color.GREEN);
                     mantissaValueText.setBackground(Color.BLACK);
-                    mantissaValueText.setPreferredSize(new Dimension(700, 80));
+                    mantissaValueText.setPreferredSize(new Dimension(700, 40));
                     mantissaValueText.setBorder(border);
 
                     //Binary Representation
                     binaryRepresentationLabel = new JLabel("Binary Representation");
-                    binaryRepresentationLabel.setPreferredSize(new Dimension(700, 15));
+                    binaryRepresentationLabel.setPreferredSize(new Dimension(700, 11));
                     binaryRepresentationLabel.setForeground(Color.GREEN);
                     binaryRepresentationLabel.setFont(new Font("Consolas", Font.BOLD, 10));
 
@@ -267,13 +265,13 @@ public class ConverterGUI extends JFrame implements ActionListener{
                     binaryRepresentationText.setFont(new Font("Consolas", Font.PLAIN, 25));
                     binaryRepresentationText.setForeground(Color.GREEN);
                     binaryRepresentationText.setBackground(Color.BLACK);
-                    binaryRepresentationText.setPreferredSize(new Dimension(700, 80));
+                    binaryRepresentationText.setPreferredSize(new Dimension(700, 40));
                     binaryRepresentationText.setBorder(border);
 
 
                     //Hexadecimal Representation
                     hexRepresentationLabel = new JLabel("Hexadecimal Representation");
-                    hexRepresentationLabel.setPreferredSize(new Dimension(700, 15));
+                    hexRepresentationLabel.setPreferredSize(new Dimension(700, 11));
                     hexRepresentationLabel.setForeground(Color.GREEN);
                     hexRepresentationLabel.setFont(new Font("Consolas", Font.BOLD, 10));
 
@@ -281,13 +279,13 @@ public class ConverterGUI extends JFrame implements ActionListener{
                     hexRepresentationText.setFont(new Font("Consolas", Font.PLAIN, 30));
                     hexRepresentationText.setForeground(Color.GREEN);
                     hexRepresentationText.setBackground(Color.BLACK);
-                    hexRepresentationText.setPreferredSize(new Dimension(700, 80));
+                    hexRepresentationText.setPreferredSize(new Dimension(700, 40));
                     hexRepresentationText.setBorder(border);
 
 
                     //Case Value
                     caseValueLabel = new JLabel("Case Value");
-                    caseValueLabel.setPreferredSize(new Dimension(700, 15));
+                    caseValueLabel.setPreferredSize(new Dimension(700, 11));
                     caseValueLabel.setForeground(Color.GREEN);
                     caseValueLabel.setFont(new Font("Consolas", Font.BOLD, 10));
 
@@ -295,7 +293,7 @@ public class ConverterGUI extends JFrame implements ActionListener{
                     caseValueText.setFont(new Font("Consolas", Font.PLAIN, 30));
                     caseValueText.setForeground(Color.GREEN);
                     caseValueText.setBackground(Color.BLACK);
-                    caseValueText.setPreferredSize(new Dimension(700, 80));
+                    caseValueText.setPreferredSize(new Dimension(700, 40));
                     caseValueText.setBorder(border);
 
 
