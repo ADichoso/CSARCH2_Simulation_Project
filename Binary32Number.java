@@ -5,19 +5,19 @@ import java.math.BigInteger;
 public class Binary32Number {
     private int nSign;
     private int nExponent;
-    private BigInteger nMantissa;
+    private String sMantissa;
     //for special cases
     private String sCase = "Normal";
 
 
     public void setSign(int nSign){this.nSign = nSign;}
     public void setExponent(int nExponent){this.nExponent = nExponent;}
-    public void setMantissa(BigInteger nMantissa){this.nMantissa = nMantissa;}
+    public void setMantissa(String sMantissa){this.sMantissa = sMantissa;}
     public void setCase(String sCase){this.sCase = sCase;}
 
     public int getSign(){return this.nSign;}
     public int getExponent(){return this.nExponent;}
-    public BigInteger getMantissa(){return this.nMantissa;}
+    public String getMantissa(){return this.sMantissa;}
     public String getCase(){return this.sCase;}
     
     public String getSignString(){return String.valueOf(this.nSign);}
@@ -35,42 +35,16 @@ public class Binary32Number {
         }while(nExponent != 0);
 
         while(sExponentString.length() != 8)
-            sExponentString += "0";
+            sExponentString = "0" + sExponentString;
 
         return sExponentString;
-    }
-
-    public String getMantissaString()
-    {
-        BigInteger nMantissa = this.nMantissa;
-        BigInteger nTwo = new BigInteger("2");
-        BigInteger nZero = new BigInteger("0");
-
-        //Continuous Divison Step
-        String sMantissaString = "";
-        do
-        {
-            //Append modulo 2 of baseIntWhole to string
-            sMantissaString = nMantissa.mod(nTwo).toString() + sMantissaString;
-            nMantissa = nMantissa.divide(nTwo);
-        }while(!nMantissa.equals(nZero));
-
-        if(sMantissaString.length() < 23)
-            //Sign extend upto 23 bits
-            while(sMantissaString.length() != 23)
-                sMantissaString += "0";
-        else if(sMantissaString.length() > 23)
-            //Cut off rest
-            sMantissaString = sMantissaString.substring(0, 23);
-
-        return sMantissaString;
     }
 
     public Binary32Number()
     {
         this.setSign(0);
         this.setExponent(0);
-        this.setMantissa(new BigInteger("0"));
+        this.setMantissa("0");
     }
 
     public Binary32Number(BinaryNumber binaryNumber)
@@ -87,51 +61,61 @@ public class Binary32Number {
     {
         Binary32Number binary32Number = new Binary32Number();
 
+        int nEPrime = 0;
+        String sMantissa = "00000000000000000000000";
+
         //Step 1: Get the sign of the binary number
         binary32Number.setSign(binaryNumber.getSign() ? 0 : 1);
-
-        //Step 2: Get exponent VALUE of binaryNumber (e' = e + 127)
-        String sBinaryNumberString = binaryNumber.getNormalizedValue();
         
-        String sExponentString = sBinaryNumberString.split("x")[1];
-        sExponentString = sExponentString.split("\\^")[1];
 
-        int nEPrime = Integer.parseInt(sExponentString.trim()) + 127;
-
-        //Continuous Divison Step
-        binary32Number.setExponent(nEPrime);
-
-        //Step 3: Get mantissa part of binary number (Derived from denormalized value of binary number)
-        String sMantissaString = sBinaryNumberString.split("x")[0];
-        sMantissaString = sMantissaString.split("\\.")[1].trim();
-
-        String sFlippedMantissaString = "";
-        for(int i = 0; i < sMantissaString.length(); i++)
+        //Special Case: check denormalized value and see if binary number actually has a value not just zero before continuing on.
+        if(binaryNumber.getDenormalizedValue().equals(" 0") || binaryNumber.getDenormalizedValue().equals("-0"))
         {
-            sFlippedMantissaString = sMantissaString.charAt(i) + sFlippedMantissaString;
+            //Special Case: Just 0
+            binary32Number.setExponent(0);
+            binary32Number.setMantissa("00000000000000000000000");
         }
-
-        BigInteger nMantissa = new BigInteger("0");
-        BigInteger nTwo = new BigInteger("2");
-        for(int i = 0; i < sFlippedMantissaString.length(); i++)
+        else
         {
-            BigInteger nValueToAdd = sFlippedMantissaString.charAt(i) == '1' ? nTwo.pow(i) : new BigInteger("0");
-            System.out.println("Adding:" + nValueToAdd.toString());
-            nMantissa = nMantissa.add(nValueToAdd);
-        }
+            //Step 2: Get exponent VALUE of binaryNumber (e' = e + 127)
+            String sBinaryNumberString = binaryNumber.getNormalizedValue();
+            
+            String sExponentString = sBinaryNumberString.split("x")[1];
+            sExponentString = sExponentString.split("\\^")[1];
+            
+            nEPrime = Integer.parseInt(sExponentString.trim());
+            
+            if(nEPrime <= -126 && (sBinaryNumberString.split("\\.")[0].trim().equals("0") || sBinaryNumberString.split("\\.")[0].trim().equals("-0")))
+                nEPrime = 0;
+            else
+                nEPrime += 127;
 
-        binary32Number.setMantissa(nMantissa);
+            //Continuous Divison Step
+            binary32Number.setExponent(nEPrime);
+
+            //Step 3: Get mantissa part of binary number (Derived from denormalized value of binary number)
+            sMantissa = sBinaryNumberString.split("x")[0];
+            sMantissa = sMantissa.split("\\.")[1].trim(); 
+
+            if(sMantissa.length() > 23)
+                sMantissa = sMantissa.substring(0, 23); //limit to 23 bits only
+            else if(sMantissa.length() < 23)
+                while(sMantissa.length() != 23)
+                    sMantissa += "0";
+            
+            binary32Number.setMantissa(sMantissa);
+        }
         
         //Checking exponent to see if it is a special case
         //If nEPrime is 0 or 255 (0000 0000 or 1111 1111), then it is a special case
         System.out.println("nEPrime: " + nEPrime);
-        System.out.println("nMantissa: " + nMantissa.intValue());
+        System.out.println("sMantissa: " + sMantissa);
         if(nEPrime == 0 || nEPrime == 255)
         {
             
             if(nEPrime == 0) {
                 //if nEPrime is 0, it could be a zero or denormalized number
-                if (nMantissa.intValue() == 0) {
+                if (!sMantissa.contains("1")) {
                     //if mantissa is 0, it is zero
                     if (binary32Number.getSign() == 0) {
                         binary32Number.setCase("Positive Zero");
@@ -143,7 +127,7 @@ public class Binary32Number {
                 }
             } else {
                 //if nEPrime is 255, it could be a infinity or NaN
-                if(nMantissa.intValue() == 0) {
+                if(!sMantissa.contains("1")) {
                     //if mantissa is 0, it is infinity
                     if(binary32Number.getSign() == 0) {
                         binary32Number.setCase("Positive Infinity");
@@ -152,7 +136,7 @@ public class Binary32Number {
                         binary32Number.setCase("Negative Infinity");
                     }
                 } else {
-                    String sSignificand = binary32Number.getMantissaString();
+                    String sSignificand = binary32Number.getMantissa();
                     if(sSignificand.charAt(0) == '0') {
                         if(sSignificand.charAt(1) == '1') {
                             //if the first two bits are 01, it is a sNaN
@@ -171,7 +155,7 @@ public class Binary32Number {
     @Override
     public String toString()
     {
-        String sFullNumber = getSignString() + getExponentString() + getMantissaString();
+        String sFullNumber = getSignString() + getExponentString() + getMantissa();
         
         String sSpacedNumber = "";
         for(int i = 0; i < sFullNumber.length(); i++)
@@ -185,7 +169,7 @@ public class Binary32Number {
 
     public String toStringHex()
     {
-        String sFullNumber = getSignString() + getExponentString() + getMantissaString();
+        String sFullNumber = getSignString() + getExponentString() + getMantissa();
 
         String sHexNumber = "";
         for(int i = 0; i < sFullNumber.length(); i += 4)
@@ -254,7 +238,7 @@ public class Binary32Number {
             myWriter.write("Normalized Value: " + binaryNumber.getNormalizedValue() + "\n");
             myWriter.write("Sign: " + binary32Number.getSignString() + "\n");
             myWriter.write("Exponent: " + binary32Number.getExponentString() + "\n");
-            myWriter.write("Mantissa: " + binary32Number.getMantissaString() + "\n");
+            myWriter.write("Mantissa: " + binary32Number.getMantissa() + "\n");
             myWriter.write("Binary Representation: 0b" + binary32Number.toString() + "\n");
             myWriter.write("Hex Representation: 0x" + binary32Number.toStringHex() + "\n");
             myWriter.write("Case: " + binary32Number.getCase() + "\n");
