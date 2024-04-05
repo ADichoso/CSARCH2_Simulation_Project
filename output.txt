@@ -1,8 +1,8 @@
-Original Value:  1.10101x2^128
-Normalized Value:  1.10101x2^128
+Original Value:  101101.011x2^6
+Normalized Value:  1.01101011x2^11
 Sign: 0
-Exponent: 11111111
-Mantissa: 10101000000000000000000
-Binary Representation: 0b0111 1111 1101 0100 0000 0000 0000 0000 
-Hex Representation: 0x7FD40000
-Case: qNaN
+Exponent: 10001010
+Mantissa: 01101011000000000000000
+Binary Representation: 0b0100 0101 0011 0101 1000 0000 0000 0000 
+Hex Representation: 0x45358000
+Case: Normal
