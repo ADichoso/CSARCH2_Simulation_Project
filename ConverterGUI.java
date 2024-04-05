@@ -363,6 +363,16 @@ public class ConverterGUI extends JFrame implements ActionListener{
         return false;
     }
 
+    public boolean containsNonAllowedDigitsBinary(String input) {
+        for (int i = 0; i < input.length(); i++) {
+            char ch = input.charAt(i);
+            if (ch != '0' && ch != '1' && ch != '.') {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -409,13 +419,14 @@ public class ConverterGUI extends JFrame implements ActionListener{
                             }
                             else {
     
-                                if(expValue > 127) {
-                                    JOptionPane.showMessageDialog(null, "Exceeded exponent limits.", "Error", JOptionPane.ERROR_MESSAGE);
-                                } else {
-    
-                                    showConvertPanel();;
-                                    
-                                }
+                    
+                                try {
+                                    showConvertPanel();
+                               } catch (Exception a) {
+                                    a.printStackTrace();
+                                // TODO: handle exception
+                               }
+                               
     
                             }
     
@@ -425,14 +436,23 @@ public class ConverterGUI extends JFrame implements ActionListener{
                                 JOptionPane.showMessageDialog(null, "Incorrect base value. Should be in base 2.", "Error", JOptionPane.ERROR_MESSAGE);
                             }
                             else {
-    
-                                if(expValue > 127) {
-                                    JOptionPane.showMessageDialog(null, "Exceeded exponent limits.", "Error", JOptionPane.ERROR_MESSAGE);
+
+                                if(containsNonAllowedDigitsBinary(parts[0])){
+                                    System.out.println(parts[0]);
+                                    JOptionPane.showMessageDialog(null, "Contains digits that are neither 1 or 0", "Error", JOptionPane.ERROR_MESSAGE);
                                 } else {
-    
-                                    showConvertPanel();
-    
+
+                                    try {
+                                        showConvertPanel();
+                                   } catch (Exception b) {
+                                        b.printStackTrace();
+                                    // TODO: handle exception
+                                   }
+
+
                                 }
+                               
+    
                             }
         
                         }
