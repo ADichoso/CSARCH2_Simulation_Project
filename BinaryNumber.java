@@ -44,10 +44,8 @@ public class BinaryNumber {
         
         BigDecimal dFractionPart = BigDecimal.valueOf(0.0);
 
-        System.out.println(dFractionPart.byteValue());
         BigInteger nWholePart = new BigInteger(sBase.split("\\.")[0].replace("-", "").trim());
 
-        System.out.println("Big Integer Value:" + nWholePart.toString());
 
         try
         {
@@ -79,10 +77,8 @@ public class BinaryNumber {
 
         String sDenormalizedNumber = realNumber.getDenormalizedValue();
 
-        System.out.println("QUirkcfd " +sDenormalizedNumber);
         if(sDenormalizedNumber.equals(" 0") || sDenormalizedNumber.equals("-0"))
         {
-            System.out.println("Oi nandito ka");
             binaryNumber.setFractionalPart("0");
             binaryNumber.setWholePart("0");
         }
@@ -90,7 +86,6 @@ public class BinaryNumber {
         {
             BigInteger nBaseWhole = new BigInteger(sDenormalizedNumber.split("\\.")[0].replace("-", "").trim());
 
-            System.out.println("Big Integer Value:" + nBaseWhole.toString());
             BigDecimal dBaseFraction = BigDecimal.valueOf(0.0);
     
             try
@@ -101,7 +96,6 @@ public class BinaryNumber {
             {
                 dBaseFraction = BigDecimal.valueOf(0.0);
             }
-            System.out.println("Faraction: " + dBaseFraction);
             //To keep it easy, Use the denormalized real number value to convert to a binary number
     
             //Step 1: Convert base whole number to binary whole number (Continuous Divison)
@@ -112,8 +106,8 @@ public class BinaryNumber {
                 //Append modulo 2 of baseIntWhole to string
                 sBinaryBaseIntWhole = (nBaseWhole.mod(nTwo)) + sBinaryBaseIntWhole;
                 nBaseWhole = nBaseWhole.divide(nTwo);
-            }while(nBaseWhole.intValue() != 0);
-    
+            }while(!nBaseWhole.equals(BigInteger.ZERO));
+            
             binaryNumber.setWholePart(sBinaryBaseIntWhole);
     
             //Step 2: convert base fractional number to binary fractional number (Continuous Multiplication)
@@ -196,7 +190,6 @@ public class BinaryNumber {
             sNormalizedBinaryNumber = (getSign() ? ' ' : '-') + "1." + sCutBinaryBase + sBinaryBaseIntFraction + "x" + "2^" + (getExpValue() + nBinaryExpPower);
         }
 
-        System.out.println("dfskljf: " + sNormalizedBinaryNumber);
         //Denormalize to power of -126 at the minimum
         if((getExpValue() + nBinaryExpPower) < -126)
         {

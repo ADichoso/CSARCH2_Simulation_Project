@@ -56,13 +56,21 @@ public class RealNumber {
         return realNumber;
     }
 
+    public boolean onlyZero(String stringNumber)
+    {
+        for (char c : stringNumber.toCharArray()) {
+            if(c != '0')
+                return false;
+        }
+        return true;
+    }
     public String getDenormalizedValue() //Applies exponent value, removing that part in the number
     {
         String sBase = "";
         String sFractionalPart = getFractionalPart().replace("0.", "");
         String sWholePart = getWholePart();
 
-        if((sFractionalPart.contains("1") || sWholePart.contains("1")))
+        if((!onlyZero(sFractionalPart) || !onlyZero(sWholePart)))
         {
             int nExpValue = getExpValue();
 

@@ -1,4 +1,5 @@
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -32,7 +33,7 @@ public class ConverterGUI extends JFrame implements ActionListener{
                exponentValueText, mantissaValueText, binaryRepresentationText, 
                hexRepresentationText, caseValueText;
 
-    JCheckBox decimalCheckBox, binaryCheckbox;
+    JCheckBox decimalCheckBox, binaryCheckbox, saveCheckbox;
 
     JButton convertButton, resetButton, convertAgainButton;
 
@@ -45,10 +46,8 @@ public class ConverterGUI extends JFrame implements ActionListener{
     RealNumber realNumber;
     BinaryNumber binaryNumber;
     Binary32Number binary32Number;
- 
 
-    
-    
+    Boolean makeTextOutput = false;
 
     ConverterGUI() {
         
@@ -92,7 +91,13 @@ public class ConverterGUI extends JFrame implements ActionListener{
         binaryCheckbox.setBorderPainted(false);
         binaryCheckbox.addActionListener(this);
 
-      
+        saveCheckbox = new JCheckBox("SAVE TO TEXT");
+        saveCheckbox.setForeground(Color.GREEN);
+        saveCheckbox.setFont(new Font("Consolas", Font.BOLD, 25));
+        saveCheckbox.setOpaque(false);
+        saveCheckbox.setContentAreaFilled(false);
+        saveCheckbox.setBorderPainted(false);
+        saveCheckbox.addActionListener(this);
 
         instructionLabel = new JLabel("<html>Input the floating point number<br/> in the chosen format (With Optional Exponent)</html>");
         instructionLabel.setForeground(Color.GREEN);
@@ -130,11 +135,11 @@ public class ConverterGUI extends JFrame implements ActionListener{
         resetButton.addActionListener(this);
 
         
-
         
         startPanel.add(converterTitle);
         startPanel.add(decimalCheckBox);
         startPanel.add(binaryCheckbox);
+        startPanel.add(saveCheckbox);
         startPanel.add(instructionLabel);
         startPanel.add(exampleLabel);
         startPanel.add(inputArea);
@@ -311,14 +316,14 @@ public class ConverterGUI extends JFrame implements ActionListener{
            realNumber = new RealNumber(numInput);
            binaryNumber = BinaryNumber.valueOf(realNumber);
            binary32Number = new Binary32Number(binaryNumber);
-           binary32Number.outputToFile(binaryNumber, binary32Number);
+           if(makeTextOutput) binary32Number.outputToFile(binaryNumber, binary32Number);
            originalValueText.setText(" " + numInput + " / " + binaryNumber.getOriginalValue());
 
         } else {
 
             binaryNumber = new BinaryNumber(numInput);
             binary32Number = new Binary32Number(binaryNumber);
-            binary32Number.outputToFile(binaryNumber, binary32Number);
+            if(makeTextOutput) binary32Number.outputToFile(binaryNumber, binary32Number);
             originalValueText.setText(binaryNumber.getOriginalValue());
         }
 
@@ -356,7 +361,7 @@ public class ConverterGUI extends JFrame implements ActionListener{
     public boolean containsNonAllowedCharacters(String input) {
         for (int i = 0; i < input.length(); i++) {
             char ch = input.charAt(i);
-            if (!(ch >= '0' && ch <= '9') && ch != 'x' && ch != 'X' && ch != '^' && ch != '.') {
+            if (!(ch >= '0' && ch <= '9') && ch != 'x' && ch != 'X' && ch != '^' && ch != '.' && ch != '-') {
                 return true;
             }
         }
@@ -375,6 +380,11 @@ public class ConverterGUI extends JFrame implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
+        if (e.getSource() == saveCheckbox)
+        {
+            makeTextOutput = !makeTextOutput;
+        }
 
         //So only one box can be selected
         if (e.getSource() == decimalCheckBox) {
@@ -405,58 +415,69 @@ public class ConverterGUI extends JFrame implements ActionListener{
                     } else {
 
 
-                        String[] parts = numInput.split("x");
-                        String baseValue = parts[1].split("\\^")[0];
+                        String[] parts = numInput.split("x"); //Split into significand and exponent
+                        String baseValue = parts[1].split("\\^")[0]; 
                         String exponent = parts[1].split("\\^")[1];
-                        int bValue = Integer.parseInt(baseValue);
-                        int expValue = Integer.parseInt(exponent);
+                        //Too big to fit here turn to string
+                        try
+                        {    
+                            int bValue = Integer.parseInt(baseValue); 
+                            int expValue = Integer.parseInt(exponent);
 
-                        if(decimalCheckBox.isSelected()) {
+                            if(decimalCheckBox.isSelected()) 
+                            {
 
-                            //check if base is 10, if not show error and clear
-                            if(bValue != 10) {
-                                JOptionPane.showMessageDialog(null, "Incorrect base value. Should be in base 10.", "Error", JOptionPane.ERROR_MESSAGE);
-                            }
-                            else {
-    
-                    
-                                try {
-                                    showConvertPanel();
-                               } catch (Exception a) {
-                                    a.printStackTrace();
-                                // TODO: handle exception
-                               }
-                               
-    
-                            }
-    
-                        } else {
-    
-                            if(bValue != 2) {
-                                JOptionPane.showMessageDialog(null, "Incorrect base value. Should be in base 2.", "Error", JOptionPane.ERROR_MESSAGE);
-                            }
-                            else {
-
-                                if(containsNonAllowedDigitsBinary(parts[0])){
-                                    System.out.println(parts[0]);
-                                    JOptionPane.showMessageDialog(null, "Contains digits that are neither 1 or 0", "Error", JOptionPane.ERROR_MESSAGE);
-                                } else {
-
-                                    try {
-                                        showConvertPanel();
-                                   } catch (Exception b) {
-                                        b.printStackTrace();
-                                    // TODO: handle exception
-                                   }
-
-
+                                //check if base is 10, if not show error and clear
+                                if(bValue != 10) 
+                                {
+                                    JOptionPane.showMessageDialog(null, "Incorrect base value. Should be in base 10.", "Error", JOptionPane.ERROR_MESSAGE);
                                 }
-                               
+                                else 
+                                {
+                                    try 
+                                    {
+                                        showConvertPanel();
+                                    } 
+                                    catch (Exception a) 
+                                    {
+                                        a.printStackTrace();
+                                    }
+                                }
+                            } 
+                            else 
+                            {
+                                if(bValue != 2) 
+                                {
+                                    JOptionPane.showMessageDialog(null, "Incorrect base value. Should be in base 2.", "Error", JOptionPane.ERROR_MESSAGE);
+                                }
+                                else
+                                {
     
-                            }
-        
-                        }
+                                    if(containsNonAllowedDigitsBinary(parts[0]))
+                                    {
+                                        System.out.println(parts[0]);
+                                        JOptionPane.showMessageDialog(null, "Contains digits that are neither 1 or 0", "Error", JOptionPane.ERROR_MESSAGE);
+                                    } 
+                                    else 
+                                    {
+                                        try 
+                                        {
+                                            showConvertPanel();
+                                        } 
+                                        catch (Exception b) 
+                                        {
+                                            b.printStackTrace();
+                                        }
+                                    }
+                                }
+            
+                            }    
 
+                        } 
+                        catch (Exception pe)
+                        {
+                            JOptionPane.showMessageDialog(null, "Exponent values are not valid", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
 
                 
@@ -497,10 +518,6 @@ public class ConverterGUI extends JFrame implements ActionListener{
             decimalCheckBox.setSelected(false);
             binaryCheckbox.setSelected(false);
         }
-
-
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
     }
 
     public static void main(String[] args) {

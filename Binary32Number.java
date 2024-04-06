@@ -33,7 +33,7 @@ public class Binary32Number {
             sExponentString = (nExponent % 2) + sExponentString;
             nExponent /= 2;
         }while(nExponent != 0);
-
+        
         while(sExponentString.length() != 8)
             sExponentString = "0" + sExponentString;
 
@@ -85,31 +85,39 @@ public class Binary32Number {
             
             nEPrime = Integer.parseInt(sExponentString.trim());
             
-            if(nEPrime <= -126 && (sBinaryNumberString.split("\\.")[0].trim().equals("0") || sBinaryNumberString.split("\\.")[0].trim().equals("-0")))
-                nEPrime = 0;
-            else
-                nEPrime += 127;
-
-            //Continuous Divison Step
-            binary32Number.setExponent(nEPrime);
-
-            //Step 3: Get mantissa part of binary number (Derived from denormalized value of binary number)
-            sMantissa = sBinaryNumberString.split("x")[0];
-            sMantissa = sMantissa.split("\\.")[1].trim(); 
-
-            if(sMantissa.length() > 23)
-                sMantissa = sMantissa.substring(0, 23); //limit to 23 bits only
-            else if(sMantissa.length() < 23)
-                while(sMantissa.length() != 23)
-                    sMantissa += "0";
+            if(nEPrime > 127)
+            {
+                nEPrime = 255;
+                binary32Number.setMantissa("00000000000000000000000");    
+                binary32Number.setExponent(nEPrime);
+            } 
+            else 
+            {
+                if(nEPrime <= -126 && (sBinaryNumberString.split("\\.")[0].trim().equals("0") || sBinaryNumberString.split("\\.")[0].trim().equals("-0")))
+                    nEPrime = 0;
+                else
+                    nEPrime += 127;
             
-            binary32Number.setMantissa(sMantissa);
+                //Continuous Divison Step
+                binary32Number.setExponent(nEPrime);
+
+                //Step 3: Get mantissa part of binary number (Derived from denormalized value of binary number)
+                sMantissa = sBinaryNumberString.split("x")[0];
+                sMantissa = sMantissa.split("\\.")[1].trim(); 
+
+                if(sMantissa.length() > 23)
+                    sMantissa = sMantissa.substring(0, 23); //limit to 23 bits only
+                else if(sMantissa.length() < 23)
+                    while(sMantissa.length() != 23)
+                        sMantissa += "0";
+                
+                binary32Number.setMantissa(sMantissa);
+            }
+
         }
         
         //Checking exponent to see if it is a special case
         //If nEPrime is 0 or 255 (0000 0000 or 1111 1111), then it is a special case
-        System.out.println("nEPrime: " + nEPrime);
-        System.out.println("sMantissa: " + sMantissa);
         if(nEPrime == 0 || nEPrime == 255)
         {
             
@@ -131,7 +139,6 @@ public class Binary32Number {
                     //if mantissa is 0, it is infinity
                     if(binary32Number.getSign() == 0) {
                         binary32Number.setCase("Positive Infinity");
-                        System.out.println("Positive Infinity");
                     } else {
                         binary32Number.setCase("Negative Infinity");
                     }
