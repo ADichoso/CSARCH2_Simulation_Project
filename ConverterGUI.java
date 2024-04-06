@@ -371,7 +371,7 @@ public class ConverterGUI extends JFrame implements ActionListener{
     public boolean containsNonAllowedDigitsBinary(String input) {
         for (int i = 0; i < input.length(); i++) {
             char ch = input.charAt(i);
-            if (ch != '0' && ch != '1' && ch != '.') {
+            if (ch != '0' && ch != '1' && ch != '.' && ch != '-') {
                 return true;
             }
         }
