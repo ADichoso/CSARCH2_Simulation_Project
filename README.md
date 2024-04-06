@@ -13,17 +13,19 @@ The output of the conversion is shown in the application, with an option to save
 ### Case 1. Input has Invalid Format - Decimal
 ### Case 2. Input has Invalid Format - Binary
 ### Case 3. Input has no Base Selected
-### Case 4. Valid Decimal Input Given - Normal Case
-### Case 5. Valid Binary Input Given - Normal Case
-### Case 6. Valid Decimal Input Given - Positive 0 Case
-### Case 7. Valid Binary Input Given - Positive 0 Case
-### Case 8. Valid Decimal Input Given - Negative 0 Case
-### Case 9. Valid Binary Input Given - Negative 0 Case
-### Case 10. Valid Decimal Input Given - Positive Infinity Case
-### Case 11. Valid Binary Input Given - Positive Infinity Case
-### Case 12. Valid Decimal Input Given - Negative Infinity Case
-### Case 13. Valid Binary Input Given - Negative Infinity Case
-### Case 14. Valid Decimal Input Given - Denormalized Case
-### Case 15. Valid Binary Input Given - Denormalized Case
-### Case 16. Valid Decimal Input Given - Save to Output File
-### Case 17. Valid Binary Input Given - Save to Output File
+### Case 4. Valid Decimal Input Given - Positive Case
+### Case 5. Valid Binary Input Given - Positive Case
+### Case 6. Valid Decimal Input Given - Negative Case
+### Case 7. Valid Binary Input Given - Negative Case
+### Case 8. Valid Decimal Input Given - Positive 0 Case
+### Case 9. Valid Binary Input Given - Positive 0 Case
+### Case 10. Valid Decimal Input Given - Negative 0 Case
+### Case 11. Valid Binary Input Given - Negative 0 Case
+### Case 12. Valid Decimal Input Given - Positive Infinity Case
+### Case 13. Valid Binary Input Given - Positive Infinity Case
+### Case 14. Valid Decimal Input Given - Negative Infinity Case
+### Case 15. Valid Binary Input Given - Negative Infinity Case
+### Case 16. Valid Decimal Input Given - Denormalized Case
+### Case 17. Valid Binary Input Given - Denormalized Case
+### Case 18. Valid Decimal Input Given - Save to Output File
+### Case 19. Valid Binary Input Given - Save to Output File
