@@ -9,6 +9,10 @@ This github project contains a Java GUI Application that simulates the conversio
 The Github application also handles special edge cases that might be encountered upon conversion due to the limitations of the format.
 The output of the conversion is shown in the application, with an option to save the results into a .txt file.
 
+## How to Run
+1. Compile ConverterGUI.java normally using `javac ConverterGUI.java` in the directory alongside the other files.
+2. Run using `java ConverterGUI`.
+
 ## Test Cases
 ### Case 1. Input has Invalid Format - Decimal
 ![image](https://github.com/ADichoso/CSARCH2_Simulation_Project/assets/39649018/71b24ac7-a06e-41ea-85a1-e7e920b46b27)
