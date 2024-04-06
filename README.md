@@ -24,7 +24,6 @@ The output of the conversion is shown in the application, with an option to save
 ![image](https://github.com/ADichoso/CSARCH2_Simulation_Project/assets/39649018/f9bd85a6-f40c-4579-9537-a4e4e8a25ad7)
 ![image](https://github.com/ADichoso/CSARCH2_Simulation_Project/assets/39649018/f3b0ae48-3924-4443-ac52-15fb57f162bc)
 
-
 ### Case 5. Valid Binary Input Given - Positive Case
 ![image](https://github.com/ADichoso/CSARCH2_Simulation_Project/assets/39649018/ee2ac2ff-ce39-41e7-a110-342421c26e99)
 ![image](https://github.com/ADichoso/CSARCH2_Simulation_Project/assets/39649018/7223573b-b06c-414e-8881-9c64a4dfbf30)
