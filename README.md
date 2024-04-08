@@ -12,6 +12,9 @@ The output of the conversion is shown in the application, with an option to save
 ## How to Run
 1. Compile ConverterGUI.java normally using `javac ConverterGUI.java` in the directory alongside the other files.
 2. Run using `java ConverterGUI`.
+3. Alternatively, the program can launched using the `Binary32Converter.jar` file.
+4. If the program does not run, it is due to the classes being compiled in a higher class version that the one
+   in the system supports. To fix this, update the Java JDK to the latest version available.
 
 ## Test Cases
 ### Case 1. Input has Invalid Format - Decimal
